@@ -1,0 +1,170 @@
+# Castlevania: Aria of Sorrow (USA) — gba_recompile config
+# Filled from runtime dispatch-miss proposals (docs/recomp_master_misses_A2CE.toml.frag)
+# plus the observed 0x0803F994 miss. Human-reviewed; regenerate after edits.
+
+[program]
+name = "Castlevania: Aria of Sorrow"
+id = "aos"
+load_address = 0x08000000
+size = 0x00800000
+entry_pc = 0x080000C0
+aot_scan_start = 0x080000C0
+aot_scan_end = 0x080E1000
+
+[identity]
+sha1 = "abd71fe01ebb201bcc133074db1dd8c5253776c7"
+
+# Cart misses observed at runtime (self-heal / interpreter bridge).
+[[extra_func]]
+addr = 0x08000000
+mode = "arm"
+note = "ROM header branch / dispatch miss"
+
+[[extra_func]]
+addr = 0x0803F994
+mode = "thumb"
+note = "dispatch miss; interior of fn@0x0803F970 — computed-jump / case target"
+
+[[extra_func]]
+addr = 0x080D8708
+mode = "thumb"
+note = "bridged x321"
+
+[[extra_func]]
+addr = 0x080D8710
+mode = "thumb"
+note = "bridged x321"
+
+[[extra_func]]
+addr = 0x080D872A
+mode = "thumb"
+note = "bridged (later session)"
+
+[[extra_func]]
+addr = 0x080D8A76
+mode = "thumb"
+note = "bridged (later session)"
+
+[[extra_func]]
+addr = 0x080D8A7C
+mode = "thumb"
+note = "bridged x8"
+
+[[extra_func]]
+addr = 0x080D8BB0
+mode = "thumb"
+note = "bridged (self-heal cache)"
+
+[[extra_func]]
+addr = 0x080D8BB6
+mode = "thumb"
+note = "bridged (self-heal cache)"
+
+[[extra_func]]
+addr = 0x080D8BC4
+mode = "thumb"
+note = "bridged (self-heal cache)"
+
+[[extra_func]]
+addr = 0x080D8BCA
+mode = "thumb"
+note = "bridged (self-heal cache)"
+
+[[extra_func]]
+addr = 0x080D8C1C
+mode = "thumb"
+note = "bridged (self-heal cache)"
+
+# ROM code copied to IWRAM before execution (found via byte-match of live dumps).
+# Statically recompile the ROM source so the IWRAM copy runs native, not interp.
+# code_copy does NOT create entries — extra_func below seeds the runtime PCs.
+[[code_copy]]
+runtime_start = 0x03003CD0
+source_start  = 0x080000FC
+size          = 0x00000800
+name          = "iwram_irq_entry"
+note          = "IWRAM IRQ vector / dispatcher"
+
+[[code_copy]]
+runtime_start = 0x03004570
+source_start  = 0x0804311C
+size          = 0x00000400
+name          = "iwram_vblank_cb"
+note          = "hot VBlank / frame callback (interpreted x20k)"
+
+[[code_copy]]
+runtime_start = 0x03004F70
+source_start  = 0x080439A8
+size          = 0x00000200
+name          = "iwram_helper_4F70"
+
+[[code_copy]]
+runtime_start = 0x030028D8
+source_start  = 0x080D874C
+size          = 0x00000380
+name          = "iwram_helper_28D8"
+
+[[extra_func]]
+addr = 0x03003CD0
+mode = "arm"
+note = "IWRAM IRQ entry (code_copy)"
+
+[[extra_func]]
+addr = 0x03004570
+mode = "arm"
+note = "IWRAM VBlank callback (code_copy)"
+
+[[extra_func]]
+addr = 0x03004F70
+mode = "arm"
+note = "IWRAM helper (code_copy)"
+
+[[extra_func]]
+addr = 0x030028D8
+mode = "thumb"
+note = "IWRAM helper (code_copy)"
+
+# Remaining IWRAM misses (ROM sources byte-matched from live dumps)
+[[code_copy]]
+runtime_start = 0x03002140
+source_start  = 0x080D81E4
+size          = 0x00000040
+name          = "iwram_2140"
+
+[[code_copy]]
+runtime_start = 0x030021E0
+source_start  = 0x080D8164
+size          = 0x00000040
+name          = "iwram_21E0"
+
+[[code_copy]]
+runtime_start = 0x03004970
+source_start  = 0x0804342C
+size          = 0x00000400
+name          = "iwram_4970"
+
+[[extra_func]]
+addr = 0x03002140
+mode = "thumb"
+note = "IWRAM (code_copy)"
+
+[[extra_func]]
+addr = 0x030021E0
+mode = "thumb"
+note = "IWRAM (code_copy)"
+
+[[extra_func]]
+addr = 0x03004970
+mode = "arm"
+note = "IWRAM (code_copy)"
+
+[[code_copy]]
+runtime_start = 0x03004DD8
+source_start  = 0x08043894
+size          = 0x00000190
+name          = "iwram_4DD8"
+
+[[extra_func]]
+addr = 0x03004DD8
+mode = "arm"
+note = "IWRAM (code_copy) — last miss"

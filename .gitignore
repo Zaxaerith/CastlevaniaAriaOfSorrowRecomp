@@ -1,0 +1,83 @@
+# Build outputs
+build/
+bin/
+out/
+generated/
+src/generated/
+recomp/
+
+# ROM-derived guest translation units (regenerate with scripts/generate.ps1)
+src/game/guest_*.cpp
+src/game/boot_system.cpp
+src/game/engine_*.cpp
+src/game/gameplay_*.cpp
+src/game/irq_*.cpp
+src/game/iwram_*.cpp
+src/game/jump_tables.cpp
+src/game/memory_dma.cpp
+src/game/save_system.cpp
+src/game/ui_audio.cpp
+src/game/world_actors.cpp
+src/game/cart_misc.cpp
+src/game/misc.cpp
+src/game/dispatch_table.cpp
+src/game/symbol_map.cpp
+src/game/recompiled.h
+
+# Compiled artifacts
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Nintendo ROMs, BIOS, and cartridge saves (never distribute)
+*.gba
+*.sav
+*.srm
+*.bin
+gba_bios.bin
+open_gba_bios.bin
+GBA_bios.rom
+
+# Tool caches, diagnostics, logs
+*.log
+*.json
+*.bmp
+*.png
+*.txt
+!README.md
+!LICENSE
+*.toml.frag
+recomp_cache/
+recomp_master_misses*
+recomp_coverage.json
+recomp_seed_proposals.toml
+docs/evidence/
+docs/frames*/
+__pycache__/
+*.py[cod]
+.cache/
+
+# Editor / OS
+.vscode/
+.vs/
+.idea/
+*.user
+Thumbs.db
+DS_Store
+desktop.ini
+
+# Local agent notes (do not publish)
+AGENT_PROMPT.md
+docs/PROGRESS.md
+docs/*.log
+docs/*.bin
+docs/iwram*
+docs/ewram*
+docs/vram*
+docs/pal*
+docs/miss_*
