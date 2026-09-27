@@ -6,23 +6,8 @@ generated/
 src/generated/
 recomp/
 
-# ROM-derived guest translation units (regenerate with scripts/generate.ps1)
-src/game/guest_*.cpp
-src/game/boot_system.cpp
-src/game/engine_*.cpp
-src/game/gameplay_*.cpp
-src/game/irq_*.cpp
-src/game/iwram_*.cpp
-src/game/jump_tables.cpp
-src/game/memory_dma.cpp
-src/game/save_system.cpp
-src/game/ui_audio.cpp
-src/game/world_actors.cpp
-src/game/cart_misc.cpp
-src/game/misc.cpp
-src/game/dispatch_table.cpp
-src/game/symbol_map.cpp
-src/game/recompiled.h
+# Guest translation units are published (user request). Regenerate locally
+# with scripts/generate.ps1 if you need to rebuild from your own ROM.
 
 # Compiled artifacts
 *.o
