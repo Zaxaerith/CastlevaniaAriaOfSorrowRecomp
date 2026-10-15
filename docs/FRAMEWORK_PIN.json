@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/mstan/gbarecomp.git",
+  "commit": "d11a36261aa1d9587a225760135d0ddea0f97344",
+  "reference_project": "https://github.com/Zaxaerith/GoldenSunTheLostAgeRecomp",
+  "recomp_ui_repository": "https://github.com/mstan/recomp-ui.git",
+  "recomp_ui_commit": "6374aae201b930c97425718249f5d39b2275ca13"
+}

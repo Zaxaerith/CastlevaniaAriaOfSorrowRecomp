@@ -26,6 +26,13 @@ Recompile the CPU, emulate the silicon.
 
 ## Current status
 
+Cleanup status (2026-10-01): **BLOCKED: framework reproducibility**.
+See [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for the dependency provenance blocker,
+final artifact removal, and Git history audit. Build and ROM-derived sources
+were deleted in the 2026-10-02 follow-up; restore SDL2 with
+`scripts/setup-sdl2.ps1` and regenerate guest code before building. The checks below reflect
+earlier project status; they were not rerun during this cleanup.
+
 - [x] Boots through BIOS intro and Konami logo to title
 - [x] New game and opening story (Game Mode `0x04`)
 - [x] Character movement, status / equipment menu
@@ -38,7 +45,7 @@ Recompile the CPU, emulate the silicon.
 ## Quick start (you supply the ROM)
 
 > [!IMPORTANT]
-> **Legal notice.** This repository does **not** include any Nintendo ROM data, GBA BIOS, or copyrighted game assets. **ROM-derived guest translation units are also not committed** — generate them locally from your own dump.
+> **Legal notice.** This repository does **not** include any Nintendo ROM data, GBA BIOS, or other copyrighted game assets. Provide your own legally obtained dumps.
 
 ### Verified ROM
 
@@ -59,18 +66,24 @@ Provide a GBA BIOS dump as `gba_bios.bin` (16,384 bytes) when launching.
 ### One-click rebuild from your ROM
 
 ```powershell
-# 1) Generate guest code from YOUR rom (not shipped in git):
+# Required on a fresh checkout: regenerate guest code from YOUR ROM:
 .\scripts\generate.ps1 -Rom "path\to\your.gba"
 
-# 2) Build the player:
+# Build the player using locally regenerated guest code:
 .\build.ps1
 ```
 
-`generate.ps1` runs `gba_recompile`, then `scripts/split_generated.py` to place
-functionally named units under `src/game/` (`world_actors.cpp`, `boot_system.cpp`, …).
+`generate.ps1` runs `gba_recompile` into `src/generated/`, then
+`scripts/split_generated.py` writes functionally named units under `src/game/`.
 Raw shards in `src/generated/` stay local and are gitignored.
 
 ### Run
+
+```powershell
+.\run.ps1 -Rom "path\to\your.gba" -Bios "path\to\gba_bios.bin"
+```
+
+Or run the executable directly from the project root:
 
 ```powershell
 .\build\Release\CastlevaniaAriaOfSorrowRecomp.exe --rom "path\to\your.gba" --bios "path\to\gba_bios.bin" --window
@@ -97,7 +110,7 @@ Place `SDL2.dll` next to the executable (staged automatically by `build.ps1` whe
 
 ```
 src/host/desktop.cpp          Desktop host entry (GUI subsystem, no auto-input)
-src/game/                     Guest translation units (local, ROM-derived — not in git)
+src/game/                     Local, ignored ROM-derived translation units
 src/framework/                Shared recompiler ABI headers
 config/game.toml              Function seeds / code-copy map used at generation
 scripts/generate.ps1          gba_recompile + split into src/game modules
@@ -106,8 +119,9 @@ scripts/rebuild_from_rom.ps1
 build.ps1
 ```
 
-> ROM-derived guest code is generated from **your** cartridge dump and is never
-> published here. See `scripts/generate.ps1`.
+> `src/game/` is generated locally and excluded from the current Git index.
+> Generate it from **your** own ROM dump using `scripts/generate.ps1`.
+> Older Git history still contains these files; see `KNOWN_ISSUES.md`.
 
 ---
 
@@ -120,6 +134,10 @@ build.ps1
 * Your own GBA ROM and BIOS dumps
 
 ---
+
+## Third-party
+
+SDL2 and GBARecomp attributions: see [THIRD_PARTY.md](THIRD_PARTY.md).
 
 ## License
 

@@ -6,8 +6,8 @@ generated/
 src/generated/
 recomp/
 
-# Guest translation units are published (user request). Regenerate locally
-# with scripts/generate.ps1 if you need to rebuild from your own ROM.
+# ROM-derived guest translation units: regenerate locally from your own ROM.
+src/game/
 
 # Compiled artifacts
 *.o
@@ -31,11 +31,19 @@ GBA_bios.rom
 # Tool caches, diagnostics, logs
 *.log
 *.json
+!docs/FRAMEWORK_PIN.json
+!manifest.json
 *.bmp
 *.png
 *.txt
+!CMakeLists.txt
+!vendor/SDL2/LICENSE.txt
 !README.md
+!README.zh-CN.md
 !LICENSE
+!THIRD_PARTY.md
+!THIRD_PARTY_NOTICES.md
+!third_party_licenses/**
 *.toml.frag
 recomp_cache/
 recomp_master_misses*
@@ -66,3 +74,23 @@ docs/ewram*
 docs/vram*
 docs/pal*
 docs/miss_*
+
+# Local dependency copies and cleanup artifacts
+vendor/SDL2/lib/
+.deps/
+logs/
+diagnostics/
+trace/
+saves/
+roms/
+*.pdb
+
+# Reinstallable SDL2 SDK; keep its attribution
+vendor/SDL2/
+!third_party_licenses/
+!third_party_licenses/*.txt
+
+# Launcher runtime caches and release stage
+*.cfg
+*.ini
+release-stage/

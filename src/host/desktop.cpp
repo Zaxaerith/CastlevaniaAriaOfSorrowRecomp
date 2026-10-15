@@ -50,7 +50,6 @@ void cleanup_runtime_diagnostics() {
     const char* cov = std::getenv("GBARECOMP_COVERAGE_JSON");
     remove_if_exists(frag);
     remove_if_exists(cov);
-    // Legacy / default locations next to the executable or CWD.
     remove_if_exists("recomp_master_misses_A2CE.toml.frag");
     remove_if_exists("recomp_coverage.json");
     remove_if_exists("recomp_seed_proposals.toml");
@@ -83,9 +82,14 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR, int) {
     args.reserve(static_cast<size_t>(argc));
     argv.reserve(static_cast<size_t>(argc) + 1);
     for (int i = 0; i < argc; ++i) {
-        char buf[MAX_PATH * 2];
-        WideCharToMultiByte(CP_UTF8, 0, argv_w[i], -1, buf, sizeof(buf), nullptr, nullptr);
-        args.emplace_back(buf);
+        int n = WideCharToMultiByte(CP_UTF8, 0, argv_w[i], -1, nullptr, 0, nullptr, nullptr);
+        if (n > 0) {
+            std::string s(static_cast<size_t>(n - 1), '\0');
+            WideCharToMultiByte(CP_UTF8, 0, argv_w[i], -1, s.data(), n, nullptr, nullptr);
+            args.emplace_back(std::move(s));
+        } else {
+            args.emplace_back("");
+        }
     }
     if (argv_w) LocalFree(argv_w);
     for (auto& s : args) argv.push_back(s.data());

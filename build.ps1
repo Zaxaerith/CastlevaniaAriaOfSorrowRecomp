@@ -1,7 +1,9 @@
 param(
     [string]$BuildType = "Release",
     [string]$GbaRecompRoot = "",
-    [string]$SdlRoot = ""
+    [string]$SdlRoot = "",
+    [string]$Target = "",
+    [int]$Jobs = 2
 )
 
 $ErrorActionPreference = "Stop"
@@ -34,9 +36,14 @@ Push-Location "build"
 try {
     & $cmake.Source .. -A x64 "-DGBARECOMP_ROOT=$GbaRecompRoot" "-DSDL2_ROOT=$SdlRoot"
     if ($LASTEXITCODE -ne 0) { throw "CMake configure failed" }
-    & $cmake.Source --build . --config $BuildType --parallel
+    
+    $buildArgs = @("--build", ".", "--config", $BuildType, "--parallel", $Jobs)
+    if ($Target) {
+        $buildArgs += @("--target", $Target)
+    }
+    & $cmake.Source @buildArgs
     if ($LASTEXITCODE -ne 0) { throw "Build failed" }
-    Write-Host "Build successful: build/$BuildType/CastlevaniaAriaOfSorrowRecomp.exe" -ForegroundColor Green
+    Write-Host "Build completed successfully." -ForegroundColor Green
 }
 finally {
     Pop-Location
